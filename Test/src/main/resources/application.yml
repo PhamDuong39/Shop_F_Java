@@ -1,0 +1,15 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/ShoppingJava
+#    username: postgres
+#    password: Anhduong1
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#  JWT:
+#    secretKey: "AKDJANVADSNLKAMSKDSMALKDMLSAKNDJKQWNE123141KASMLKEQWMLF"
+#    jwtExpiration: 864000
+#    refreshExpiration: 6048000
+#
+#
