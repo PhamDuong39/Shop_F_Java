@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 48px;
+        }
+    </style>
+</head>
+<body>
+<p th:text="${'Xin chào, ' + fullName}"></p>
+<p th:text="${'- Tên truy cập: ' + email}"></p>
+<p> Vui lòng bấm vào nút bên dưới để xác nhận Email! </p>
+<a th:href="${confirmationLink}">Xác nhận Email</a>
+
+<p>Lưu ý: Đây là email được tự động tạo bởi hệ thống và chỉ có giá trị trong vòng 1h</p>
+<p>Đây là email tự động vui lòng không trả lời.</p>
+</body>
+</html>

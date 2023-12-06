@@ -31,6 +31,12 @@ public class JwtService {
     @Value("${JWT.refreshExpiration}")
     private long refreshExpiration;
 
+    @Value("${JWT.refreshExpConfirmToken}")
+    private long refreshExpConfirmToken;
+
+    @Value("${JWT.refreshExpResetPasswordToken}")
+    private long refreshExpResetPassToken;
+
     // Build + Create token
 
     private String BuildToken(Map<String, Object> extraClaims, Account account, long expiration) {
@@ -61,7 +67,13 @@ public class JwtService {
         return BuildToken(new HashMap<>(), account, refreshExpiration);
     }
 
+    public String GenerateEmailConfirmToken(Account account) {
+        return BuildToken(new HashMap<>(), account, refreshExpConfirmToken);
+    }
 
+    public String GeneratePasswordResetToken(Account account) {
+        return BuildToken(new HashMap<>(), account, refreshExpResetPassToken);
+    }
 
     // Read + get data in token
     private Claims ExtractAllClaim(String token) {
@@ -93,8 +105,8 @@ public class JwtService {
         return ExtractExpiration(token).before(new Date());
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, Account account) {
         final String username = ExtractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(account.getEmail()) && !isTokenExpired(token));
     }
 }

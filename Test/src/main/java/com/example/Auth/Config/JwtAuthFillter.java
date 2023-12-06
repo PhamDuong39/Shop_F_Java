@@ -1,6 +1,8 @@
 package com.example.Auth.Config;
 
+import com.example.Auth.Repository.AccountRepository;
 import com.example.Auth.Service.JwtService;
+import com.example.Common.Entity.Account;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +17,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.util.Optional;
 
 
 @Component // đánh dấu class là 1 spring bean được quản lý bởi container IoC cua Spring
@@ -23,7 +27,8 @@ import java.io.IOException;
 public class JwtAuthFillter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;// die
+    private final UserDetailsService userDetailsService;
+    private final AccountRepository accountRepository;
 
     // đăng ký AccountInfoService implement  UserDetailsService
 
@@ -53,7 +58,13 @@ public class JwtAuthFillter extends OncePerRequestFilter {
         if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-            var isTokenValid = jwtService.isTokenValid(token, userDetails);
+            Optional<Account> optionalAccount = accountRepository.findByEmail(email);
+            boolean isTokenValid;
+            if(optionalAccount.isPresent()) {
+                Account account = optionalAccount.get();
+                isTokenValid = jwtService.isTokenValid(token, account);
+            }
+            else isTokenValid = false;
 
             // Nếu token hợp lệ -> tạo authenticationToken chứa thông tin user -> lưu vào SecurityContextHolder : đánh dấu đã xác thực
             if(isTokenValid) {
