@@ -3,6 +3,7 @@ package com.example.Auth.Dto;
 
 import com.example.Auth.Repository.RoleRepository;
 import com.example.Common.Entity.Account;
+import com.example.Common.Entity.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,11 +11,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AccountInfo implements UserDetails {
 
     private final String Email;
@@ -24,12 +26,22 @@ public class AccountInfo implements UserDetails {
     // maybe die here
     private RoleRepository roleRepository;
 
-    public AccountInfo(Account account) {
-        Email = account.getEmail();
-        Password = account.getPasswordHash();
-        List<String> roles = roleRepository.findRolesByEmail(Email);
-        authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    // tạo ra 1 thằng là accoountData(Account, List<Quyen>)
+    // Viết 1 câu query trong repo để get all quyền from account ID
+    // chô nàu truyền vào accountData => xong get nó ra là xong
+    public AccountInfo(AccountData accountData) {
+        Email = accountData.getAccount().getEmail();
+        Password = accountData.getAccount().getPasswordHash();
+
+        String[] roles = new String[accountData.getRoleList().size()];
+        int  i = 0;
+        for(Role role : accountData.getRoleList()) {
+            roles[i] = role.getRoleName();
+            i++;
+        }
+
+        authorities = Arrays.stream(roles)
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 

@@ -11,9 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    @Query("SELECT r.roleName FROM Role r " +
+    @Query("SELECT r FROM Role r " +
             "JOIN AccountRole ar ON r.id = ar.role.id " +
             "JOIN Account a ON a.id = ar.account.id " +
-            "WHERE a.email = :email")
-    List<String> findRolesByEmail(String email);
+            "WHERE a.id = :accountId")
+    List<Role> findRolesByEmail(Long accountId);
 }
